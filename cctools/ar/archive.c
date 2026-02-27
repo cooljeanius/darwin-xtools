@@ -422,7 +422,7 @@ copy_ar(cfp, size)
 		sz -= nr;
 		for (off = 0; off < nr; nr -= off, off += nw)
 			if ((nw = write(to, buf + off, nr)) < 0)
-				error(cfp->wname);
+				error("%s", cfp->wname);
 	}
 	if (sz) {
 		if (nr == 0)
@@ -438,7 +438,7 @@ copy_ar(cfp, size)
 	}
 	if (cfp->flags & WPAD && (size + already_written) & 1 &&
 	    write(to, &pad, 1) != 1)
-		error(cfp->wname);
+		error("%s", cfp->wname);
 }
 
 /*
