@@ -2871,12 +2871,12 @@ update_toc_ar_dates:
 	 * Now that the library is created on the file system it is written
 	 * to get the time for the file on that file system.
 	 */
-	if(stat(output, &stat_buf) == -1){
-	    system_fatal("can't stat file output file: %s", output);
-	    return;
-	}
 	if((fd = open(output, O_WRONLY, 0)) == -1){
 	    system_error("can't open output file: %s", output);
+	    return;
+	}
+	if(fstat(fd, &stat_buf) == -1){
+	    system_fatal("cannot fstat file output file: %s", output);
 	    return;
 	}
 	if(zero_ar_date == TRUE)
