@@ -795,9 +795,9 @@ static void copyFile(const char* srcFile, const char* dstFile)
 	
 	// copy permission bits (use descriptor-based APIs to avoid TOCTOU on dstFile path)
 	if ( fchmod(dst, stat_buf.st_mode & 07777) == -1 )
-		throwf("can't fchmod temp file %s, errno=%d", dstFile, errno);
+		throwf("cannot fchmod temp file %s, errno=%d", dstFile, errno);
 	if ( fchown(dst, stat_buf.st_uid, stat_buf.st_gid) == -1)
-		throwf("can't fchown temp file %s, errno=%d", dstFile, errno);
+		throwf("cannot fchown temp file %s, errno=%d", dstFile, errno);
 		  
 	// copy contents
 	ssize_t len;
