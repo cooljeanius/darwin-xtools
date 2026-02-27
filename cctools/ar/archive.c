@@ -421,8 +421,11 @@ copy_ar(cfp, size)
 	while (sz && (nr = read(from, buf, MIN(sz, sizeof(buf)))) > 0) {
 		sz -= nr;
 		for (off = 0; off < nr; nr -= off, off += nw)
-			if ((nw = write(to, buf + off, nr)) < 0)
-				error("%s", cfp->wname);
+			if ((nw = write(to, buf + off, nr)) < 0) {
+				char errmsg[1024];
+				(void)snprintf(errmsg, sizeof(errmsg), "%s", cfp->wname);
+				error(errmsg);
+			}
 	}
 	if (sz) {
 		if (nr == 0)
