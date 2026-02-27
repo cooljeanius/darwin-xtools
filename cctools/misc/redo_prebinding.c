@@ -5356,7 +5356,7 @@ indr:
 	new_indr_loop.next = indr_loop;
 	lookup_symbol(name, get_indr_lib(name, &arch_lib), FALSE, symbol,
 		      module_state, lib, isub_image, itoc, &new_indr_loop);
-	return(symbol != NULL);
+	return(*symbol != NULL);
 }
 
 /*
