@@ -473,20 +473,23 @@ int dyld_shared_cache_extract_dylibs_progress(const char* shared_cache_file_path
 													void (^progress)(unsigned current, unsigned total))
 {
 	struct stat statbuf;
-	if (stat(shared_cache_file_path, &statbuf)) {
-		fprintf(stderr, "Error: stat failed for dyld shared cache at %s\n", shared_cache_file_path);
-		return -1;
-	}
 		
 	int cache_fd = open(shared_cache_file_path, O_RDONLY);
 	if (cache_fd < 0) {
 		fprintf(stderr, "Error: failed to open shared cache file at %s\n", shared_cache_file_path);
 		return -1;
 	}
+
+	if (fstat(cache_fd, &statbuf) != 0) {
+		fprintf(stderr, "Error: fstat failed for dyld shared cache at %s\n", shared_cache_file_path);
+		close(cache_fd);
+		return -1;
+	}
 	
 	void* mapped_cache = mmap(NULL, statbuf.st_size, PROT_READ, MAP_PRIVATE, cache_fd, 0);
 	if (mapped_cache == MAP_FAILED) {
 		fprintf(stderr, "Error: mmap() for shared cache at %s failed, errno=%d\n", shared_cache_file_path, errno);
+		close(cache_fd);
 		return -1;
 	}
     
