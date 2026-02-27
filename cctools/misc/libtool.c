@@ -2876,7 +2876,7 @@ update_toc_ar_dates:
 	    return;
 	}
 	if(fstat(fd, &stat_buf) == -1){
-	    system_fatal("can't stat file output file: %s", output);
+	    system_fatal("cannot fstat file output file: %s", output);
 	    return;
 	}
 	if(zero_ar_date == TRUE)
