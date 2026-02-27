@@ -427,7 +427,7 @@ void Rebaser<A>::adjustSymbolTable()
 		}
 	}
 	
-	// FIXME ¥¥¥ adjust dylib_module if it exists
+	// FIXME Â¥Â¥Â¥ adjust dylib_module if it exists
 }
 
 static uint64_t read_uleb128(const uint8_t*& p, const uint8_t* end)
@@ -793,11 +793,11 @@ static void copyFile(const char* srcFile, const char* dstFile)
 	(void)fcntl(src, F_NOCACHE, 1);
 	// we want to cache the dst because we are about to map it in and modify it
 	
-	// copy permission bits
-	if ( chmod(dstFile, stat_buf.st_mode & 07777) == -1 )
-		throwf("can't chmod temp file %s, errno=%d", dstFile, errno);
-	if ( chown(dstFile, stat_buf.st_uid, stat_buf.st_gid) == -1)
-		throwf("can't chown temp file %s, errno=%d", dstFile, errno);
+	// copy permission bits (use descriptor-based APIs to avoid TOCTOU on dstFile path)
+	if ( fchmod(dst, stat_buf.st_mode & 07777) == -1 )
+		throwf("cannot fchmod temp file %s, errno=%d", dstFile, errno);
+	if ( fchown(dst, stat_buf.st_uid, stat_buf.st_gid) == -1)
+		throwf("cannot fchown temp file %s, errno=%d", dstFile, errno);
 		  
 	// copy contents
 	ssize_t len;
