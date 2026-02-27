@@ -626,13 +626,10 @@ char *out_file_name)
 	if(bad_error != 0)
 	    return;
 	/*
-	 * Avoid doing the unlink() on special files, just unlink regular files
-	 * that exist.
+	 * Attempt to remove any existing file with this name; ignore all errors
+	 * as the file may not exist or may not be removable.
 	 */
-	if(stat(out_file_name, &stat_buf) != -1){
-	    if(stat_buf.st_mode & S_IFREG)
-		(void)unlink(out_file_name);
-	}
+	(void)unlink(out_file_name);
 	if((fd = open(out_file_name, O_WRONLY | O_CREAT | O_TRUNC, 0666)) == -1)
 	    as_fatal("can't create output file: %s", out_file_name);
 	if(write(fd, output_addr, output_size) != (int)output_size)
